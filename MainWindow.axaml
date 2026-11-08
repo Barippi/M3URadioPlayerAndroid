@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="M3URadioPlayer.Android.MainWindow"
+             Background="#1E1E1E">
+  <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="16">
+    <StackPanel Grid.Row="0" Margin="0,0,0,16">
+      <TextBlock Name="StatusText" Text="未再生" FontSize="20" FontWeight="Bold" Foreground="White" TextTrimming="CharacterEllipsis"/>
+      <TextBlock Name="TitleText" Text="タイトル: ---" FontSize="14" Foreground="#4CC2FF" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" TextWrapping="Wrap"/>
+    </StackPanel>
+
+    <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,0,0,12">
+      <ComboBox Name="PlaylistCombo" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,8,0" />
+      <Button Name="ReloadButton" Grid.Column="1" Content="再読込" Click="OnReloadClicked" />
+    </Grid>
+
+    <ListBox Name="StationList" Grid.Row="2" Background="#252525" Margin="0,0,0,16">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding Name}" Padding="8,6" Foreground="White" FontSize="15"/>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+
+    <Grid Grid.Row="3" ColumnDefinitions="*, *">
+      <Button Name="PlayButton" Grid.Column="0" Content="再生" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,6,0" Height="46" Click="OnPlayClicked" />
+      <Button Name="StopButton" Grid.Column="1" Content="停止" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="6,0,0,0" Height="46" Click="OnStopClicked" />
+    </Grid>
+  </Grid>
+</UserControl>

@@ -1,0 +1,1 @@
+Put libbass.so and libbassflac.so here.

@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>26.0</SupportedOSPlatformVersion>
+    <Nullable>enable</Nullable>
+    <ApplicationId>com.barippi.m3uradioplayer</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+  </PropertyGroup>
+
+  <!-- リリース用署名設定 -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>my-release-key.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>my-key-alias</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>password</AndroidSigningKeyPass>
+    <AndroidSigningStorePass>password</AndroidSigningStorePass>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Android" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.0" />
+    <PackageReference Include="ManagedBass" Version="3.1.1" />
+  </ItemGroup>
+
+  <!-- BASS ネイティブライブラリの取り込み -->
+  <ItemGroup>
+    <AndroidNativeLibrary Include="lib\arm64-v8a\libbass.so">
+      <Abi>arm64-v8a</Abi>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\arm64-v8a\libbassflac.so">
+      <Abi>arm64-v8a</Abi>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\armeabi-v7a\libbass.so">
+      <Abi>armeabi-v7a</Abi>
+    </AndroidNativeLibrary>
+    <AndroidNativeLibrary Include="lib\armeabi-v7a\libbassflac.so">
+      <Abi>armeabi-v7a</Abi>
+    </AndroidNativeLibrary>
+  </ItemGroup>
+</Project>
