@@ -70,8 +70,10 @@ adb install -r "bin\Release\net10.0-android\publish\com.barippi.m3uradioplayer-S
 
 ---
 
-## ライセンス / サードパーティ
+## Credits & Licenses
 
-* [Avalonia UI](https://github.com/AvaloniaUI/Avalonia) - MIT License
-* [ManagedBass](https://github.com/Japyna/ManagedBass) - MIT License
-* [BASS Audio Library](https://www.un4seen.com/) - Un4seen Developments
+* **Application Code**: Licensed under the [MIT License](LICENSE).
+* **[Avalonia UI](https://github.com/AvaloniaUI/Avalonia)**: MIT License.
+* **[ManagedBass](https://github.com/Japyna/ManagedBass)**: MIT License.
+* **[BASS Audio Library](https://www.un4seen.com/)**: Copyright (c) Un4seen Developments Ltd.  
+  This software uses the BASS audio library and BASS FLAC add-on for non-commercial playback.
