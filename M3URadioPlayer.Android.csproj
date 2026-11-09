@@ -10,13 +10,12 @@
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
 
-  <!-- リリース用署名設定 -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <AndroidKeyStore>true</AndroidKeyStore>
     <AndroidSigningKeyStore>my-release-key.keystore</AndroidSigningKeyStore>
     <AndroidSigningKeyAlias>my-key-alias</AndroidSigningKeyAlias>
-    <AndroidSigningKeyPass>password</AndroidSigningKeyPass>
-    <AndroidSigningStorePass>password</AndroidSigningStorePass>
+    <AndroidSigningKeyPass>$(SIGNING_KEY_PASS)</AndroidSigningKeyPass>
+    <AndroidSigningStorePass>$(SIGNING_STORE_PASS)</AndroidSigningStorePass>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,7 +24,6 @@
     <PackageReference Include="ManagedBass" Version="3.1.1" />
   </ItemGroup>
 
-  <!-- BASS ネイティブライブラリの取り込み -->
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\arm64-v8a\libbass.so">
       <Abi>arm64-v8a</Abi>

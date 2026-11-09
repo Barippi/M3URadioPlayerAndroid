@@ -18,9 +18,13 @@ ManagedBass (BASS) エンジンを採用し、Android 9 のレガシー環境か
 * **フォアグラウンドサービスによるバックグラウンド再生**
   * Android 14+ / Android 17 の厳格なサービス起動要件に対応（`ForegroundServiceType.MediaPlayback`）。
   * 画面オフ時や他アプリ利用時でも途切れず再生を維持。
+* **モダン Android（Edge-to-Edge）ネイティブ対応**
+  * AndroidX の WindowInsetsCompat により、ステータスバーや3ボタンナビゲーションバーとの被りをOSネイティブレベルで確実に回避。
 * **柔軟な M3U プレイリスト読み込み**
   * 本体ストレージ（`/storage/emulated/0/Playlists` 等）および外部 SD カード内の `.m3u` を自動スキャン。
   * Android 11〜13+ の Scoped Storage に対応し、起動時に `MANAGE_EXTERNAL_STORAGE`（全ファイルアクセス権）を自動案内。
+* **アプリ内 About & ライセンスダイアログ**
+  * 右上の About ボタンから、BASS、Avalonia、ManagedBass などのサードパーティクレジットおよびライセンス情報をいつでも確認可能。
 
 ---
 
@@ -41,10 +45,11 @@ M3URadioPlayer.Android/
 │   └── armeabi-v7a/      # libbass.so, libbassflac.so
 ├── Resources/
 │   └── mipmap-xxxhdpi/   # ic_launcher.png (アプリアイコン)
-├── MainActivity.cs       # 権限チェック・ライフサイクル制御
-├── MainWindow.axaml(.cs) # UI・再生制御・ローカルプロキシ・タグ解析
+├── MainActivity.cs       # 権限チェック・ライフサイクル・WindowInsets制御
+├── MainWindow.axaml(.cs) # UI・再生制御・ローカルプロキシ・Aboutダイアログ
 ├── RadioPlaybackService.cs # フォアグラウンド再生サービス・通知管理
-├── my-release-key.keystore # リリース署名用キーストア
+├── my-release-key.keystore # リリース署名用キーストア（Git管理外）
+├── LICENSE               # MIT ライセンスおよびサードパーティクレジット
 └── M3URadioPlayer.Android.csproj
 ```
 
@@ -55,11 +60,11 @@ M3URadioPlayer.Android/
 ### リリースビルド（署名済み APK）
 
 ```powershell
-dotnet clean
-dotnet publish -c Release -f net10.0-android
+# 環境変数またはプロパティ引数でパスワードを指定してビルド
+dotnet publish -c Release -f net10.0-android -p:AndroidSigningKeyPass="キーストアのパスワード" -p:AndroidSigningStorePass="キーストアのパスワード"
 ```
 
-生成パス:  
+生成パス:
 `bin\Release\net10.0-android\publish\com.barippi.m3uradioplayer-Signed.apk`
 
 ### 実機インストール
@@ -75,5 +80,5 @@ adb install -r "bin\Release\net10.0-android\publish\com.barippi.m3uradioplayer-S
 * **Application Code**: Licensed under the [MIT License](LICENSE).
 * **[Avalonia UI](https://github.com/AvaloniaUI/Avalonia)**: MIT License.
 * **[ManagedBass](https://github.com/Japyna/ManagedBass)**: MIT License.
-* **[BASS Audio Library](https://www.un4seen.com/)**: Copyright (c) Un4seen Developments Ltd.  
+* **[BASS Audio Library](https://www.un4seen.com/)**: Copyright (c) 1999-2026 Un4seen Developments Ltd.  
   This software uses the BASS audio library and BASS FLAC add-on for non-commercial playback.

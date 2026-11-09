@@ -1,18 +1,11 @@
-## ビルド生成物
 bin/
 obj/
-
-## 署名鍵・機密ファイル（GitHub への誤コミット防止）
 *.keystore
 *.jks
 *.p12
-
-## IDE / エディタ一時ファイル
 .vs/
 .idea/
 *.user
 *.suo
 .DS_Store
-
-## ログ・一時ファイル
 *.log

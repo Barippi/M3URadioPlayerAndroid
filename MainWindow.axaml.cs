@@ -100,6 +100,16 @@ public partial class MainWindow : UserControl
         });
     }
 
+    private void OnAboutOpenClicked(object? sender, RoutedEventArgs e)
+    {
+        AboutOverlay.IsVisible = true;
+    }
+
+    private void OnAboutCloseClicked(object? sender, RoutedEventArgs e)
+    {
+        AboutOverlay.IsVisible = false;
+    }
+
     private void ScanPlaylists()
     {
         PlaylistCombo.ItemsSource = null;
@@ -124,9 +134,7 @@ public partial class MainWindow : UserControl
                     {
                         var fileName = Path.GetFileName(file);
                         if (!playlistItems.Exists(p => p.FullPath == file))
-                        {
                             playlistItems.Add(new PlaylistItem($"本体: {fileName}", file));
-                        }
                     }
                 }
             }
@@ -149,9 +157,7 @@ public partial class MainWindow : UserControl
                             {
                                 var fileName = Path.GetFileName(file);
                                 if (!playlistItems.Exists(p => p.FullPath == file))
-                                {
                                     playlistItems.Add(new PlaylistItem($"SD: {fileName}", file));
-                                }
                             }
                         }
 
@@ -163,9 +169,7 @@ public partial class MainWindow : UserControl
                             {
                                 var fileName = Path.GetFileName(file);
                                 if (!playlistItems.Exists(p => p.FullPath == file))
-                                {
                                     playlistItems.Add(new PlaylistItem($"SD(App): {fileName}", file));
-                                }
                             }
                         }
                     }
