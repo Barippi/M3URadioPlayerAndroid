@@ -1,42 +1,59 @@
 # M3U Radio Player for Android
 
-.NET 10 (Android) と Avalonia UI で構築された、クロスプラットフォーム対応のネットラジオプレーヤーです。  
-ManagedBass (BASS) エンジンを採用し、Android 9 のレガシー環境から Android 17 (Target SDK 36) の最新 OS まで安定したバックグラウンド再生を提供します。
+[English]  
+A lightweight, high-performance internet radio player for Android built with **.NET 10** and **Avalonia UI**.  
+Powered by the native **ManagedBass (BASS)** audio engine, it provides robust background streaming, low-latency playback, and seamless edge-to-edge support across legacy devices (Android 9.0) up to modern releases (Android 17 / Target SDK 36).
+
+[日本語]  
+**.NET 10 (Android)** と **Avalonia UI** で構築された、Android 向けの軽量・高音質ネットラジオプレーヤーです。  
+**ManagedBass (BASS)** ネイティブオーディオエンジンを採用し、Android 9 のレガシー環境から最新の Android 17 (Target SDK 36) まで、安定したバックグラウンド再生と快適な操作性を提供します。
 
 ---
 
-## 主な特徴・機能
+## Features / 主な特徴・機能
 
-* **高音質ストリーミング再生**
-  * MP3、AAC、FLAC（`libbassflac.so`）の高音質ネイティブデコードに対応。
-* **ローカル HTTP ループバック中継プロキシ**
-  * アプリ内 `HttpListener`（`127.0.0.1:51234`）経由でストリームを受信。
-  * Android 9 でのルート証明書失効や Android 17 での SSL/TLS ネゴシエーション失敗（`BASS_ERROR_SSL` / エラー 10）を根本回避。
-  * `Content-Type` と `Icy-MetaData: 1` を中継し、FLAC デコードと ICY 曲名表示を両立。
-* **リアルタイムメタデータ表示**
-  * ICY タグ（Shoutcast/Icecast）および Ogg/FLAC Vorbis Comment から曲名・アーティスト名をリアルタイムに抽出・表示。
-* **フォアグラウンドサービス ＆ 通知操作**
-  * 通知バーに「停止」ボタンを配置し、アプリを開かずにワンタップ停止可能。
-  * イヤホン切断（BecomingNoisy）や電話着信・他音声割り込み（AudioFocus）時の自動一時停止・自動復帰に対応。
-* **モダン Android（Edge-to-Edge）ネイティブ対応**
-  * AndroidX の WindowInsetsCompat により、ステータスバーや3ボタンナビゲーションバーとの被りをOSネイティブレベルで確実に回避。
-* **柔軟な M3U プレイリスト読み込み**
-  * 本体ストレージ（`/storage/emulated/0/Playlists` 等）および外部 SD カード内の `.m3u` を自動スキャン。
-  * Android 11〜13+ の Scoped Storage に対応し、起動時に `MANAGE_EXTERNAL_STORAGE`（全ファイルアクセス権）を自動案内。
-* **アプリ内 About & ライセンスダイアログ**
-  * 右上の About ボタンから、BASS、Avalonia、ManagedBass などのサードパーティクレジットおよびライセンス情報をいつでも確認可能。
+* **High-Quality Audio Streaming / 高音質ストリーミング再生**
+  * Native hardware-accelerated decoding for MP3, AAC, and FLAC streams via `libbassflac.so`.
+  * MP3、AAC、および `libbassflac.so` による FLAC ネイティブ再生に対応。
+
+* **Local HTTP Loopback Proxy / ローカル中継プロキシ機構**
+  * Embedded internal `HttpListener` (`127.0.0.1:51234`) bypasses Android 9 legacy root CA expirations and strict Android 17 TLS/SSL negotiation failures (`BASS_ERROR_SSL` / Error 10).
+  * Relays `Content-Type` headers alongside `Icy-MetaData: 1` to deliver flawless FLAC decoding and real-time ICY title streaming concurrently.
+  * アプリ内ループバックプロキシにより、古い証明書の失効や最新 OS の SSL/TLS ネゴシエーション失敗を根本回避。ストリームの安定受信と FLAC デコード、ICY メタデータ取得を両立。
+
+* **Real-Time Metadata Display / リアルタイム曲名表示**
+  * Automatically parses ICY tags (Shoutcast/Icecast) and Ogg/FLAC Vorbis Comments to display streaming song titles and artists in real time.
+  * Shoutcast/Icecast の ICY タグや Ogg/FLAC Vorbis Comment から曲名・アーティスト情報をリアルタイム抽出して画面・通知に表示。
+
+* **Audio Interruption & Focus Management / 割り込み処理・フォーカス制御**
+  * **Headphone Unplug (`BecomingNoisy`)**: Pauses playback instantly when wired headphones are unplugged or Bluetooth audio disconnects to prevent accidental speaker blasting.
+  * **Call & Ringtone Handling**: Pauses during incoming phone calls—including silent/manner mode calls—and active phone conversations, resuming playback automatically after hanging up.
+  * イヤホン切断時の自動停止、および通常着信・マナーモード着信・通話中の一時停止と終話後の自動復帰に対応。
+
+* **Notification Controls / 通知バーからの直接操作**
+  * Foreground playback service features an integrated "Stop" action button in the notification shade, allowing instant one-tap stopping from the lock screen without reopening the app.
+  * 再生中通知に「停止」ボタンを配置し、ロック画面や通知シェードからワンタップで即座に完全停止可能。
+
+* **Edge-to-Edge & Dark Theme / モダン UI 最適化**
+  * Native `WindowInsetsCompat` handling prevents UI overlaps with system status bars and 3-button navigation bars on Android 14, 15, and 16+.
+  * Fully unified dark theme palette (`#1E1E1E`).
+  * AndroidX の WindowInsets によりステータスバーやナビゲーションバーとの被りを解消。アプリ全体をダークテーマで統一。
+
+* **M3U Playlist Scanner / 柔軟な M3U プレイリスト読み込み**
+  * Automatically discovers `.m3u` files in internal storage (`/storage/emulated/0/Playlists`) and external SD cards.
+  * Full compatibility with Android 11+ Scoped Storage via `MANAGE_EXTERNAL_STORAGE`.
+  * 端末内ストレージや外部 SD カード内の `Playlists` フォルダから `.m3u` ファイルを自動検出。
 
 ---
 
-## 必要要件
+## Requirements / 動作環境
 
-* .NET 10 SDK（Android ワークロード導入済み）
-* Android デバイス / エミュレータ（Android 9.0 / API 28 〜 Android 17 / API 36）
-* 署名用キーストアファイル（`my-release-key.keystore`）
+* **Target Device**: Android 9.0 (API 28) ~ Android 17 (API 36) (ARM64-v8a / ARMeabi-v7a)
+* **Build Environment**: .NET 10 SDK with Android Workload (`dotnet workload install android`)
 
 ---
 
-## プロジェクト構成
+## Project Structure / プロジェクト構成
 
 ```text
 M3URadioPlayer.Android/
@@ -44,41 +61,44 @@ M3URadioPlayer.Android/
 │   ├── arm64-v8a/        # libbass.so, libbassflac.so
 │   └── armeabi-v7a/      # libbass.so, libbassflac.so
 ├── Resources/
-│   └── mipmap-xxxhdpi/   # ic_launcher.png (アプリアイコン)
-├── MainActivity.cs       # 権限チェック・ライフサイクル・WindowInsets制御
-├── MainWindow.axaml(.cs) # UI・再生制御・ローカルプロキシ・Aboutダイアログ
-├── RadioPlaybackService.cs # フォアグラウンド再生サービス・通知管理・AudioFocus・Noisy制御
-├── my-release-key.keystore # リリース署名用キーストア（Git管理外）
-├── LICENSE               # MIT ライセンスおよびサードパーティクレジット
+│   └── mipmap-xxxhdpi/   # ic_launcher.png
+├── MainActivity.cs       # Permissions, Lifecycle & WindowInsets
+├── MainWindow.axaml(.cs) # UI, Playback controls, Local Proxy & About dialog
+├── RadioPlaybackService.cs # Foreground Service, AudioFocus, Telephony & Notification
+├── my-release-key.keystore # Release signing keystore (git ignored)
+├── LICENSE               # MIT License & Third-party notices
 └── M3URadioPlayer.Android.csproj
 ```
 
 ---
 
-## ビルド ＆ インストール
+## Build & Run / ビルド・実行手順
 
-### リリースビルド（署名済み APK）
+### 1. Release Build (Signed APK) / 署名ビルド
 
 ```powershell
-# 環境変数またはプロパティ引数でパスワードを指定してビルド
-dotnet publish -c Release -f net10.0-android -p:AndroidSigningKeyPass="キーストアのパスワード" -p:AndroidSigningStorePass="キーストアのパスワード"
+dotnet publish -c Release -f net10.0-android -p:AndroidSigningKeyPass="YOUR_KEYSTORE_PASSWORD" -p:AndroidSigningStorePass="YOUR_KEYSTORE_PASSWORD"
 ```
 
-生成パス:
-`bin\Release\net10.0-android\publish\com.barippi.m3uradioplayer-Signed.apk`
+The signed APK will be generated at:  
+署名済み APK は以下のパスに出力されます：  
+`bin/Release/net10.0-android/publish/com.barippi.m3uradioplayer-Signed.apk`
 
-### 実機インストール
+### 2. Install to Device / 実機インストール
 
 ```powershell
-adb install -r "bin\Release\net10.0-android\publish\com.barippi.m3uradioplayer-Signed.apk"
+adb install -r "bin/Release/net10.0-android/publish/com.barippi.m3uradioplayer-Signed.apk"
 ```
 
 ---
 
-## Credits & Licenses
+## Credits & Licenses / ライセンス情報
 
-* **Application Code**: Licensed under the [MIT License](LICENSE).
-* **[Avalonia UI](https://github.com/AvaloniaUI/Avalonia)**: MIT License.
-* **[ManagedBass](https://github.com/Japyna/ManagedBass)**: MIT License.
+* **Application Code**: Licensed under the [MIT License](LICENSE).  
+  Copyright (c) 2026 Barippi.
+* **[Avalonia UI](https://github.com/AvaloniaUI/Avalonia)**: MIT License.  
+  Copyright (c) .NET Foundation and Contributors.
+* **[ManagedBass](https://github.com/Japyna/ManagedBass)**: MIT License.  
+  Copyright (c) Mathew Sachin.
 * **[BASS Audio Library](https://www.un4seen.com/)**: Copyright (c) 1999-2026 Un4seen Developments Ltd.  
-  This software uses the BASS audio library and BASS FLAC add-on for non-commercial playback.
+  Used under the BASS freeware license for non-commercial software.
