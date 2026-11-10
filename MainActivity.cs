@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -6,6 +7,8 @@ using Android.Net;
 using Android.OS;
 using Android.Provider;
 using Android.Views;
+using AndroidX.Core.App;
+using AndroidX.Core.Content;
 using AndroidX.Core.View;
 using Avalonia;
 using Avalonia.Android;
@@ -42,14 +45,12 @@ public class MainActivity : AvaloniaMainActivity<App>
             var insetsController = WindowCompat.GetInsetsController(Window, Window.DecorView);
             if (insetsController != null)
             {
-                // 背景が暗いため、ステータスバーおよびナビゲーションバーの文字・アイコンを白にする
                 insetsController.AppearanceLightStatusBars = false;
                 insetsController.AppearanceLightNavigationBars = false;
             }
         }
 
-        // Android 14/15/17 (Target SDK 35+) の Edge-to-Edge による
-        // ステータスバー（上部）とナビゲーションバー（下部）の被りを Android ネイティブレベルで確実に押し返す
+        // Edge-to-Edge による被りを Android ネイティブレベルで押し返す
         var contentView = FindViewById(global::Android.Resource.Id.Content);
         if (contentView != null)
         {
@@ -57,7 +58,7 @@ public class MainActivity : AvaloniaMainActivity<App>
             ViewCompat.SetOnApplyWindowInsetsListener(contentView, new SystemBarInsetsListener());
         }
 
-        CheckAndRequestStoragePermission();
+        CheckAndRequestPermissions();
     }
 
     protected override void OnResume()
@@ -70,8 +71,31 @@ public class MainActivity : AvaloniaMainActivity<App>
         }
     }
 
-    private void CheckAndRequestStoragePermission()
+    private void CheckAndRequestPermissions()
     {
+        var neededPermissions = new List<string>();
+
+        // 電話着信状態検知権限 (READ_PHONE_STATE)
+        if (ContextCompat.CheckSelfPermission(this, global::Android.Manifest.Permission.ReadPhoneState) != Permission.Granted)
+        {
+            neededPermissions.Add(global::Android.Manifest.Permission.ReadPhoneState);
+        }
+
+        // ストレージ権限 (Android 12以下用)
+        if (Build.VERSION.SdkInt < BuildVersionCodes.Tiramisu)
+        {
+            if (ContextCompat.CheckSelfPermission(this, global::Android.Manifest.Permission.ReadExternalStorage) != Permission.Granted)
+            {
+                neededPermissions.Add(global::Android.Manifest.Permission.ReadExternalStorage);
+            }
+        }
+
+        if (neededPermissions.Count > 0)
+        {
+            ActivityCompat.RequestPermissions(this, neededPermissions.ToArray(), 1002);
+        }
+
+        // 全ファイル管理アクセス権 (Android 11+)
         if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
         {
             if (!global::Android.OS.Environment.IsExternalStorageManager)
@@ -87,13 +111,6 @@ public class MainActivity : AvaloniaMainActivity<App>
                     var fallbackIntent = new Intent(Settings.ActionManageAllFilesAccessPermission);
                     StartActivity(fallbackIntent);
                 }
-            }
-        }
-        else if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
-        {
-            if (CheckSelfPermission(global::Android.Manifest.Permission.ReadExternalStorage) != Permission.Granted)
-            {
-                RequestPermissions(new[] { global::Android.Manifest.Permission.ReadExternalStorage }, 1001);
             }
         }
     }

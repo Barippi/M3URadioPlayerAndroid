@@ -33,6 +33,9 @@ public partial class MainWindow : UserControl
     private List<StationItem> _stations = new();
     private string _currentStationName = "";
 
+    // 再生状態プロパティ
+    public bool IsPlaying => _streamHandle != 0;
+
     // ローカル中継プロキシ
     private HttpListener? _localProxy;
     private CancellationTokenSource? _proxyCts;
@@ -45,11 +48,13 @@ public partial class MainWindow : UserControl
     {
         var handler = new HttpClientHandler
         {
-            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            AllowAutoRedirect = true,
+            MaxAutomaticRedirections = 5
         };
         _httpClient = new HttpClient(handler)
         {
-            Timeout = TimeSpan.FromSeconds(20)
+            Timeout = TimeSpan.FromSeconds(15)
         };
         _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Linux; Android)");
     }
@@ -236,7 +241,8 @@ public partial class MainWindow : UserControl
         {
             try
             {
-                StopPlayback();
+                // 再生前クリーンアップ（内部停止）
+                CleanUpPlaybackResources();
 
                 _currentStationName = station.Name;
                 StatusText.Text = "接続中: " + station.Name;
@@ -249,7 +255,7 @@ public partial class MainWindow : UserControl
 
                 Task.Run(async () =>
                 {
-                    await Task.Delay(200, ct);
+                    await Task.Delay(250, ct);
 
                     _streamHandle = Bass.CreateStream(_localProxyUrl, 0, BassFlags.Default | BassFlags.AutoFree, null, IntPtr.Zero);
 
@@ -347,7 +353,16 @@ public partial class MainWindow : UserControl
                                 await outStream.FlushAsync(ct);
                             }
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            if (!ct.IsCancellationRequested)
+                            {
+                                Dispatcher.UIThread.Post(() =>
+                                {
+                                    StatusText.Text = "中継エラー: " + ex.Message;
+                                });
+                            }
+                        }
                         finally
                         {
                             try { context.Response.Close(); } catch { }
@@ -370,7 +385,7 @@ public partial class MainWindow : UserControl
         StopPlayback();
     }
 
-    private void StopPlayback()
+    private void CleanUpPlaybackResources()
     {
         if (_proxyCts != null)
         {
@@ -390,9 +405,15 @@ public partial class MainWindow : UserControl
             Bass.ChannelStop(_streamHandle);
             Bass.StreamFree(_streamHandle);
             _streamHandle = 0;
-            StatusText.Text = "停止";
-            TitleText.Text = "曲名: ---";
         }
+    }
+
+    public void StopPlayback()
+    {
+        CleanUpPlaybackResources();
+
+        StatusText.Text = "停止";
+        TitleText.Text = "曲名: ---";
 
         StopPlaybackService();
     }
@@ -526,5 +547,27 @@ public partial class MainWindow : UserControl
             context.StartService(intent);
         }
         catch { }
+    }
+
+    private StationItem? _pausedStation;
+
+    public void PauseForFocusLoss()
+    {
+        if (_streamHandle != 0 && StationList.SelectedItem is StationItem current)
+        {
+            _pausedStation = current;
+            CleanUpPlaybackResources();
+            StatusText.Text = "一時停止（通話・他音声中）";
+        }
+    }
+
+    public void ResumeFromFocusGain()
+    {
+        if (_pausedStation != null)
+        {
+            StationList.SelectedItem = _pausedStation;
+            _pausedStation = null;
+            OnPlayClicked(this, new RoutedEventArgs());
+        }
     }
 }

@@ -12,4 +12,6 @@
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+  <!-- マナーモード時の着信状態検知用 -->
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 </manifest>

@@ -3,7 +3,7 @@
              x:Class="M3URadioPlayer.Android.MainWindow"
              Background="#1E1E1E">
   <Grid>
-    <!-- メイン再生画面 (MainActivity側でシステムバー余白が物理的に確保されます) -->
+    <!-- メイン再生画面 -->
     <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="16,12,16,16">
       <!-- ヘッダー（タイトル・ステータス ＋ Aboutボタン） -->
       <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,16">
@@ -37,15 +37,13 @@
       </Grid>
     </Grid>
 
-    <!-- About モーダルオーバーレイ（最前面ポップアップ） -->
+    <!-- About モーダルオーバーレイ -->
     <Grid Name="AboutOverlay" Background="#B0000000" IsVisible="False">
       <Border Background="#2B2B2B" CornerRadius="12" Margin="20" Padding="18" 
               VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxHeight="520">
         <Grid RowDefinitions="Auto, *, Auto">
-          <!-- タイトル -->
           <TextBlock Grid.Row="0" Text="M3U Radio Player" FontSize="18" FontWeight="Bold" Foreground="White" Margin="0,0,0,10" />
 
-          <!-- スクロールライセンス表示領域 -->
           <ScrollViewer Grid.Row="1" Margin="0,0,0,14">
             <StackPanel Spacing="10">
               <TextBlock Text="Version 1.0.0&#x0a;Copyright (c) 2026 Barippi" FontSize="13" Foreground="#CCCCCC" />
@@ -53,21 +51,18 @@
               <Border Height="1" Background="#444444" Margin="0,4" />
               <TextBlock Text="Third-Party Licenses &amp; Credits:" FontWeight="Bold" FontSize="13" Foreground="White" />
 
-              <!-- BASS クレジット -->
               <StackPanel Spacing="2">
                 <TextBlock Text="• BASS Audio Library &amp; BASS FLAC add-on" FontWeight="SemiBold" FontSize="12" Foreground="#4CC2FF" />
                 <TextBlock Text="  Copyright (c) 1999-2026 Un4seen Developments Ltd.&#x0a;  Used under non-commercial freeware license.&#x0a;  https://www.un4seen.com/" 
                            FontSize="11" Foreground="#AAAAAA" TextWrapping="Wrap" />
               </StackPanel>
 
-              <!-- Avalonia UI クレジット -->
               <StackPanel Spacing="2">
                 <TextBlock Text="• Avalonia UI" FontWeight="SemiBold" FontSize="12" Foreground="#4CC2FF" />
                 <TextBlock Text="  Copyright (c) .NET Foundation and Contributors&#x0a;  Licensed under the MIT License&#x0a;  https://github.com/AvaloniaUI/Avalonia" 
                            FontSize="11" Foreground="#AAAAAA" TextWrapping="Wrap" />
               </StackPanel>
 
-              <!-- ManagedBass クレジット -->
               <StackPanel Spacing="2">
                 <TextBlock Text="• ManagedBass" FontWeight="SemiBold" FontSize="12" Foreground="#4CC2FF" />
                 <TextBlock Text="  Copyright (c) Mathew Sachin&#x0a;  Licensed under the MIT License&#x0a;  https://github.com/Japyna/ManagedBass" 
@@ -76,7 +71,6 @@
             </StackPanel>
           </ScrollViewer>
 
-          <!-- 閉じるボタン -->
           <Button Grid.Row="2" Content="閉じる" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                   Height="40" Background="#3A3A3D" Foreground="White" Click="OnAboutCloseClicked" />
         </Grid>

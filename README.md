@@ -15,9 +15,9 @@ ManagedBass (BASS) エンジンを採用し、Android 9 のレガシー環境か
   * `Content-Type` と `Icy-MetaData: 1` を中継し、FLAC デコードと ICY 曲名表示を両立。
 * **リアルタイムメタデータ表示**
   * ICY タグ（Shoutcast/Icecast）および Ogg/FLAC Vorbis Comment から曲名・アーティスト名をリアルタイムに抽出・表示。
-* **フォアグラウンドサービスによるバックグラウンド再生**
-  * Android 14+ / Android 17 の厳格なサービス起動要件に対応（`ForegroundServiceType.MediaPlayback`）。
-  * 画面オフ時や他アプリ利用時でも途切れず再生を維持。
+* **フォアグラウンドサービス ＆ 通知操作**
+  * 通知バーに「停止」ボタンを配置し、アプリを開かずにワンタップ停止可能。
+  * イヤホン切断（BecomingNoisy）や電話着信・他音声割り込み（AudioFocus）時の自動一時停止・自動復帰に対応。
 * **モダン Android（Edge-to-Edge）ネイティブ対応**
   * AndroidX の WindowInsetsCompat により、ステータスバーや3ボタンナビゲーションバーとの被りをOSネイティブレベルで確実に回避。
 * **柔軟な M3U プレイリスト読み込み**
@@ -47,7 +47,7 @@ M3URadioPlayer.Android/
 │   └── mipmap-xxxhdpi/   # ic_launcher.png (アプリアイコン)
 ├── MainActivity.cs       # 権限チェック・ライフサイクル・WindowInsets制御
 ├── MainWindow.axaml(.cs) # UI・再生制御・ローカルプロキシ・Aboutダイアログ
-├── RadioPlaybackService.cs # フォアグラウンド再生サービス・通知管理
+├── RadioPlaybackService.cs # フォアグラウンド再生サービス・通知管理・AudioFocus・Noisy制御
 ├── my-release-key.keystore # リリース署名用キーストア（Git管理外）
 ├── LICENSE               # MIT ライセンスおよびサードパーティクレジット
 └── M3URadioPlayer.Android.csproj
